@@ -668,30 +668,7 @@ function downloadBlobDoc(name,body){const blob=new Blob(['\ufeff',body],{type:'a
 function downloadPreliminary(id){
  const s=(current&&current.id===id)?current:getHistory().find(x=>x.id===id);if(!s||!s.preliminaryReady)return;
  s.preliminaryPitch=s.preliminaryPitch||buildPreliminaryPitch(s);if(current&&current.id===s.id)upsertSession();
- const body=wordHtmlHeader('Kriz-IA · Pitch MVP · Versión preliminar',s)+`<p><b>Esta versión organiza lo trabajado según la estructura oficial del pitch.</b> Revísala, ajusta la redacción y luego copia la sección “Versión preliminar para revisión” en Kriz-IA para una segunda validación.</p>`+structuredTable(s)+`<h2>Versión preliminar para revisión</h2><div style="white-space:pre-wrap">${esc(s.preliminaryPitch)}</div><p class="note">Orden esperado: Gancho y empatía → Idea creativa → Demostración interactiva → Aprendizaje e iteración → Cierre y sustentación.</p><script id="sise-sheet-bridge">
-(function(){
-  const CONFIG={project:"Recurso SISE",endpoint:"https://script.google.com/macros/s/AKfycbzl5H0yFgNjx5RbpySFnSeAR4ia3VW2H0LKw9GXfz7TTSzvYeKWYMo967UKB_IL6pxP/exec",queueKey:'siseHtmlInteractionQueueV1'};
-  const sessionId='SES-'+Date.now()+'-'+Math.random().toString(36).slice(2,8);
-  function qRead(){try{return JSON.parse(localStorage.getItem(CONFIG.queueKey)||'[]')}catch(e){return []}}
-  function qWrite(a){try{localStorage.setItem(CONFIG.queueKey,JSON.stringify(a.slice(-500)))}catch(e){}}
-  async function send(payload){
-    if(!CONFIG.endpoint||CONFIG.endpoint.includes('__APPS_SCRIPT'))throw new Error('ENDPOINT_NOT_CONFIGURED');
-    const r=await fetch(CONFIG.endpoint,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({action:'track',payload}),redirect:'follow'});
-    if(!r.ok)throw new Error('HTTP_'+r.status);return r.text();
-  }
-  async function flush(){if(!navigator.onLine)return;const q=qRead();if(!q.length)return;const remain=[];for(const x of q){try{await send(x)}catch(e){remain.push(x)}}qWrite(remain)}
-  function descriptor(el){if(!el)return '';return el.id||el.name||el.getAttribute('aria-label')||el.textContent?.trim().slice(0,80)||el.tagName}
-  function valueOf(el){if(!el)return '';if(el.type==='password'||el.type==='file')return '';if(el.type==='checkbox'||el.type==='radio')return el.checked?String(el.value||'true'):'false';return String(el.value??'').slice(0,1000)}
-  function track(eventType,data={}){const payload={project:CONFIG.project,sessionId,eventType,timestamp:new Date().toISOString(),url:location.href,title:document.title,userAgent:navigator.userAgent,...data};send(payload).catch(()=>{const q=qRead();q.push(payload);qWrite(q)});return payload}
-  window.SISE_TRACK=(eventType,data)=>track(eventType,data||{});
-  document.addEventListener('click',e=>{const el=e.target.closest('button,a,[role="button"]');if(el)track('CLICK',{element:descriptor(el),text:(el.textContent||'').trim().slice(0,180)})},true);
-  document.addEventListener('change',e=>{const el=e.target;if(el.matches('input,select,textarea'))track('CHANGE',{field:descriptor(el),value:valueOf(el)})},true);
-  document.addEventListener('submit',e=>{track('FORM_SUBMIT',{form:descriptor(e.target)})},true);
-  window.addEventListener('online',flush);
-  track('PAGE_VIEW');flush();
-})();
-</script>
-</body></html>`;
+ const body=wordHtmlHeader('Kriz-IA · Pitch MVP · Versión preliminar',s)+`<p><b>Esta versión organiza lo trabajado según la estructura oficial del pitch.</b> Revísala, ajusta la redacción y luego copia la sección “Versión preliminar para revisión” en Kriz-IA para una segunda validación.</p>`+structuredTable(s)+`<h2>Versión preliminar para revisión</h2><div style="white-space:pre-wrap">${esc(s.preliminaryPitch)}</div><p class="note">Orden esperado: Gancho y empatía → Idea creativa → Demostración interactiva → Aprendizaje e iteración → Cierre y sustentación.</p></body></html>`;
  downloadBlobDoc(`Pitch_MVP_Preliminar_${s.scenario}_${user.first}.doc`,body);
 }
 
